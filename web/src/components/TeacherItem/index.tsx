@@ -2,33 +2,51 @@ import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 import './style.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    avatar: string;
+    bio: string;
+    cost: number;
+    id: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection(){
+        api.post('connections', {
+            user_id: teacher.id
+        });
+    }
+    
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://instagram.fvix3-1.fna.fbcdn.net/v/t51.2885-19/s320x320/110197166_4571036196271546_386375203077332616_n.jpg?_nc_ht=instagram.fvix3-1.fna.fbcdn.net&_nc_ohc=Usv6Te4XPJwAX9-aaH-&oh=d345ab0b46880f5b561b64219cfc3fe7&oe=5F5D12A7" alt="Érick Mazzocco" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Érick Mazzocco</strong>
-                    <span>Química</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Entusiasta das melhores tecnologias de química avançada;
-                <br /><br />
-                Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências.
-            </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/hora
-                            <strong>R$ 20,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+
+                <a target="_blank" rel="noopener noreferrer" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
                     <img src={whatsappIcon} alt="Whatsapp" />
                             Entrar em contato
-                        </button>
+                </a>
             </footer>
         </article>
     );
